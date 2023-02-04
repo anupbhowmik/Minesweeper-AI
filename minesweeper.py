@@ -193,7 +193,7 @@ class MinesweeperAI():
         for sentence in self.knowledge:
             sentence.mark_safe(cell)
 
-    def get_neighbors(self, cell):
+    def get_neighbors(self, cell, count):
         """
         Returns the number of mines that are
         within one row and column of a given cell,
@@ -219,11 +219,14 @@ class MinesweeperAI():
                     # modification: skipping the diagonals
                     continue
 
-                if 0 <= i < self.height and 0 <= j < self.width:
+                if (0 <= i < self.height and 0 <= j < self.width) and \
+                        ((i, j) not in self.mines and (i, j) not in self.safes):
                     # print("adding neighbors: ", (i, j))
                     neighbor_cells.append((i, j))
+                if (i, j) in self.mines:
+                    count -= 1
 
-        return neighbor_cells
+        return neighbor_cells, count
 
     def remove_duplicate_knowledge(self):
         unique_knowledge = []
@@ -256,7 +259,7 @@ class MinesweeperAI():
 
         # 3) add a new sentence to the AI's knowledge base
         #    based on the value of `cell` and `count`
-        neighbor_cells = self.get_neighbors(cell)
+        neighbor_cells, count = self.get_neighbors(cell, count)
         new_sentence = Sentence(neighbor_cells, count)
         self.knowledge.append(new_sentence)
         print("Adding new knowledge: ", new_sentence)

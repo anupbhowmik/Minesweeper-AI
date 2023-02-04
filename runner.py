@@ -221,10 +221,10 @@ while True:
             revealed.add(move)
             ai.add_knowledge(move, nearby)
 
-            if len(ai.knowledge) > 0:
-                print("Current knowledge base:")
-                for knlg in ai.knowledge:
-                    print(knlg)
+        if len(ai.knowledge) > 0:
+            print("Current knowledge base:")
+            for knlg in ai.knowledge:
+                print(knlg)
 
 
     pygame.display.flip()
