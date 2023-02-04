@@ -71,8 +71,9 @@ class Minesweeper():
             for j in range(cell[1] - 1, cell[1] + 2):
                 # iterating over currCol - 1 until currCol + 2 which means upto currCol + 1
                 # Ignore the cell itself
-                if (i, j) == cell:
+                if ((i, j) == cell):
                     continue
+
                 if (i == cell[0] - 1 and j == cell[1] - 1) \
                         or (i == cell[0] - 1 and j == cell[1] + 1) \
                         or (i == cell[0] + 1 and j == cell[1] - 1) \
@@ -218,9 +219,18 @@ class MinesweeperAI():
                     # modification: skipping the diagonals
                     continue
 
-                neighbor_cells.append((i, j))
+                if 0 <= i < self.height and 0 <= j < self.width:
+                    # print("adding neighbors: ", (i, j))
+                    neighbor_cells.append((i, j))
 
         return neighbor_cells
+
+    def remove_duplicate_knowledge(self):
+        unique_knowledge = []
+        for currSen in self.knowledge:
+            if currSen not in unique_knowledge:
+                unique_knowledge.append(currSen)
+        self.knowledge = unique_knowledge
 
     def add_knowledge(self, cell, count):
         """
@@ -242,12 +252,14 @@ class MinesweeperAI():
 
         # 2) mark the cell as safe
         self.mark_safe(cell)
+        print("Adding new safe cell: ", cell)
 
         # 3) add a new sentence to the AI's knowledge base
         #    based on the value of `cell` and `count`
         neighbor_cells = self.get_neighbors(cell)
         new_sentence = Sentence(neighbor_cells, count)
         self.knowledge.append(new_sentence)
+        print("Adding new knowledge: ", new_sentence)
 
         # 4) mark any additional cells as safe or as mines
         #    if it can be concluded based on the AI's knowledge base
@@ -259,8 +271,10 @@ class MinesweeperAI():
             known_mines = list(curr_sentence.known_mines())
             for safe in safe_cells:
                 self.mark_safe(safe)
+                print("Adding new safe cell (From inference): ", safe)
             for mine in known_mines:
                 self.mark_mine(mine)
+                print("Marking mine (From inference): ", mine)
 
         # 5) add any new sentences to the AI's knowledge base
         #    if they can be inferred from existing knowledge
@@ -276,14 +290,18 @@ class MinesweeperAI():
             elif curr_sentence.cells.issuperset(new_sentence.cells):
                 inferred_knowledge.append(
                     Sentence(curr_sentence.cells - new_sentence.cells, curr_sentence.count - new_sentence.count))
-                # self.knowledge.append(
-                #     Sentence(curr_sentence.cells - new_sentence.cells, curr_sentence.count - new_sentence.count))
 
             elif new_sentence.cells.issuperset(curr_sentence.cells):
                 inferred_knowledge.append(
                     Sentence(new_sentence.cells - curr_sentence.cells, new_sentence.count - curr_sentence.count))
 
+        if len(inferred_knowledge) > 0:
+            print("Adding new inferred knowledge base: ")
+            for inf_knlg in inferred_knowledge:
+                print(inf_knlg)
         self.knowledge.extend(inferred_knowledge)
+
+        self.remove_duplicate_knowledge()
 
         # marking again
         for curr_sentence in self.knowledge:
@@ -294,8 +312,10 @@ class MinesweeperAI():
             known_mines = list(curr_sentence.known_mines())
             for safe in safe_cells:
                 self.mark_safe(safe)
+                print("Adding new safe cell (From inference): ", safe)
             for mine in known_mines:
                 self.mark_mine(mine)
+                print("Marking mine (From inference): ", mine)
 
     def make_safe_move(self):
         """
@@ -307,7 +327,7 @@ class MinesweeperAI():
         and self.moves_made, but should not modify any of those values.
         """
         candidate_cells = self.safes - self.moves_made
-        if not candidate_cells:
+        if len(candidate_cells) == 0:
             return None
 
         return candidate_cells.pop()
@@ -326,6 +346,7 @@ class MinesweeperAI():
                     moves_left.add((row, col))
 
         # print("moves left: " , len(moves_left))
+
         if len(moves_left) == 0:
             return None
         return random.choice(tuple(moves_left))

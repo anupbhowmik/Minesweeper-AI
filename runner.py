@@ -187,9 +187,9 @@ while True:
                     flags = ai.mines.copy()
                     print("No moves left to make.")
                 else:
-                    print("No known safe moves, AI making random move.")
+                    print("No known safe moves, AI making random move:", end=" ")
             else:
-                print("AI making safe move.")
+                print("AI making safe move:", end=" ")
             time.sleep(0.2)
 
         # Reset game state
@@ -212,12 +212,19 @@ while True:
 
     # Make move and update AI knowledge
     if move:
-        print("(i, j): ", move[0], ", ", move[1])
+        print("mines found: ", len(ai.mines))
+        print('(',move[0], ",", move[1],')')
         if game.is_mine(move):
             lost = True
         else:
             nearby = game.nearby_mines(move)
             revealed.add(move)
             ai.add_knowledge(move, nearby)
+
+            if len(ai.knowledge) > 0:
+                print("Current knowledge base:")
+                for knlg in ai.knowledge:
+                    print(knlg)
+
 
     pygame.display.flip()
