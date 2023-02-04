@@ -212,7 +212,7 @@ while True:
 
     # Make move and update AI knowledge
     if move:
-        print("mines found: ", len(ai.mines))
+        # print("mines found: ", len(ai.mines))
         print('(',move[0], ",", move[1],')')
         if game.is_mine(move):
             lost = True

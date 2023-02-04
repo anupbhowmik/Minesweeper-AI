@@ -142,6 +142,8 @@ class Sentence():
         if cell in self.cells:
             self.cells.remove(cell)
             self.count -= 1
+            # reducing count by one because we are removing a cell that is knows to be mine
+            # so, the sentence should have count 1 less
 
     def mark_safe(self, cell):
         """
@@ -221,10 +223,14 @@ class MinesweeperAI():
 
                 if (0 <= i < self.height and 0 <= j < self.width) and \
                         ((i, j) not in self.mines and (i, j) not in self.safes):
+                    # we don't need the known mines and known safes in the new sentence
                     # print("adding neighbors: ", (i, j))
                     neighbor_cells.append((i, j))
+
                 if (i, j) in self.mines:
                     count -= 1
+                    # this count will be used to create a new sentence
+
 
         return neighbor_cells, count
 
