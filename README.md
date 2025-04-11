@@ -112,12 +112,16 @@ The `MinesweeperAI` class implements the AI's decision-making process:
 
 If we have two sentences:
 
-- {A, B, C} = 1
-- {A, B} = 1
+```code
+{A, B, C} = 1
+{A, B} = 1
+```
 
 We can infer:
 
-- {C} = (1 - 1) = 0, meaning C is safe
+```code
+{C} = (1 - 1) = 0, meaning C is safe
+```
 
 ---
 
