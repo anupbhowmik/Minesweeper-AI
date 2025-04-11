@@ -1,4 +1,3 @@
-import itertools
 import random
 
 
@@ -142,7 +141,7 @@ class Sentence():
         if cell in self.cells:
             self.cells.remove(cell)
             self.count -= 1
-            # reducing count by one because we are removing a cell that is knows to be mine
+            # reducing count by one because we are removing a cell that is known to be mine
             # so, the sentence should have count 1 less
 
     def mark_safe(self, cell):
