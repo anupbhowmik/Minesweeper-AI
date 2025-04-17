@@ -1,4 +1,4 @@
-# Minesweeper with AI
+# Minesweeper AI Solver
 
 This project implements the classic Minesweeper game with an AI assistant that can make intelligent moves based on logical inference. The game is built with Python and uses PyGame for the graphical interface.
 
